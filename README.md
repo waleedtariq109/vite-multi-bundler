@@ -1,7 +1,9 @@
 # vite-multi-bundler
+
 A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
 
 ## Installation
+
 You can install the `vite-multi-bundler` using npm:
 
 ```sh
@@ -9,6 +11,7 @@ npm install vite-multi-bundler --save-dev
 ```
 
 ## Usage
+
 First, import the plugin and add it to your Vite config file:
 
 ```js
@@ -45,11 +48,10 @@ The `vite-multi-bundler` takes an options object with the following properties:
   - `filename` (string): The name of the output file.
   - `outputDir` (string): The directory where the output file should be saved.
   - `entryPoints` (string[]): An array of entry points for the JavaScript bundle.
-  
 - `css` (object): The options for the CSS bundle.
-  - filename (string): The name of the output file.
-  - outputDir (string): The directory where the output file should be saved.
-  - entryPoints (string[]): An array of entry points for the CSS bundle.
+  - `filename` (string): The name of the output file.
+  - `outputDir` (string): The directory where the output file should be saved.
+  - `entryPoints` (string[]): An array of entry points for the CSS bundle.
 
 ## Conclusion
 
