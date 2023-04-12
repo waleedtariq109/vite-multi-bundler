@@ -53,6 +53,6 @@ The `vite-multi-bundler` takes an options object with the following properties:
   - `outputDir` (string): The directory where the output file should be saved.
   - `entryPoints` (string[]): An array of entry points for the CSS bundle.
 
-## Conclusion
+## Final Words
 
 Using the `vite-multi-bundler` plugin with Vite is a simple and efficient way to generate a single bundle for your multiple JavaScript and CSS files. With the options provided, you can easily configure the output directory, filename, and entry points for each bundle, making it easy to customize your build process to fit your project's needs.

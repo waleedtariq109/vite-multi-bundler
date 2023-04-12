@@ -10,6 +10,10 @@
     "multi-bundler",
     "vite"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/waleedtariq109/vite-multi-bundler"
+  },
   "dependencies": {
     "vite": "^4.2.1"
   },
