@@ -44,14 +44,14 @@ Once you have defined your bundles, Vite will automatically generate the bundled
 
 The `vite-multi-bundler` takes an options object with the following properties:
 
-- `js` (object): The options for the JavaScript bundle.
-  - `filename` (string): The name of the output file.
-  - `outputDir` (string): The directory where the output file should be saved.
-  - `entryPoints` (string[]): An array of entry points for the JavaScript bundle.
-- `css` (object): The options for the CSS bundle.
-  - `filename` (string): The name of the output file.
-  - `outputDir` (string): The directory where the output file should be saved.
-  - `entryPoints` (string[]): An array of entry points for the CSS bundle.
+- `js` (object): The options for the JavaScript bundle
+  - `filename` (string): The name of the output file
+  - `outputDir` (string): The directory where the output file should be saved
+  - `entryPoints` (string[]): An array of entry points for the JavaScript bundle
+- `css` (object): The options for the CSS bundle
+  - `filename` (string): The name of the output file
+  - `outputDir` (string): The directory where the output file should be saved
+  - `entryPoints` (string[]): An array of entry points for the CSS bundle
 
 ## Final Words
 
