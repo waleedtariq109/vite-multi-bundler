@@ -10,6 +10,9 @@
     "multi-bundler",
     "vite"
   ],
+  "dependencies": {
+    "vite": "^4.2.1"
+  },
   "author": "Waleed Tariq",
   "license": "MIT"
 }
