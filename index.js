@@ -1,4 +1,4 @@
-import { join, dirname } from "path";
+import { join } from "path";
 import { promises as fs } from "fs";
 import { minify } from "terser";
 
@@ -24,7 +24,7 @@ export default function multiBundlePlugin(options) {
 
   return {
     name: "multi-bundle-plugin",
-    async writeBundle(_, _) {
+    async generateBundle(outputOptions, bundle) {
       const jsBundle =
         js && js.entryPoints.length
           ? await bundleAssets(js.entryPoints, js.filename, js.outputDir)
@@ -62,10 +62,9 @@ export default function multiBundlePlugin(options) {
  * @returns {Promise<string>} The bundled and minified code.
  */
 async function bundleAssets(files, filename, outputDir) {
+  const cwd = process.cwd();
   const fileContents = await Promise.all(
-    files.map((filePath) =>
-      fs.readFile(join(dirname(import.meta.url.slice(7)), filePath), "utf8")
-    )
+    files.map((filePath) => fs.readFile(join(cwd, filePath), "utf8"))
   );
 
   const bundledCode = fileContents.join("\n");
