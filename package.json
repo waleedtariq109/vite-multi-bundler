@@ -16,6 +16,8 @@
     "url": "https://github.com/waleedtariq109/vite-multi-bundler"
   },
   "dependencies": {
+    "cssnano": "^6.0.0",
+    "postcss": "^8.4.21",
     "vite": "^4.2.1"
   },
   "author": "Waleed Tariq",

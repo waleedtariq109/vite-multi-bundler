@@ -1,6 +1,8 @@
 import { join } from "path";
 import { promises as fs } from "fs";
 import { minify } from "terser";
+import postcss from "postcss";
+import cssnano from "cssnano";
 
 /**
  * A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
@@ -51,7 +53,8 @@ export default function multiBundlePlugin(options) {
           const cssBundle = await bundleAssets(
             cssOptions.entryPoints,
             cssOptions.filename,
-            cssOptions.outputDir
+            cssOptions.outputDir,
+            true
           );
           this.emitFile({
             type: "asset",
@@ -70,19 +73,33 @@ export default function multiBundlePlugin(options) {
  * @param {string[]} files - The array of file paths to bundle.
  * @param {string} filename - The output file name.
  * @param {string} outputDir - The output directory path.
+ * @param {boolean} isCss - Whether the files to be bundled are CSS files or not.
  * @returns {Promise<string>} The bundled and minified code.
  */
-async function bundleAssets(files, filename, outputDir) {
+async function bundleAssets(files, filename, outputDir, isCss = false) {
   const cwd = process.cwd();
   const fileContents = await Promise.all(
     files.map((filePath) => fs.readFile(join(cwd, filePath), "utf8"))
   );
 
-  const bundledCode = fileContents.join("\n");
-  const minifiedCode = (await minify(bundledCode)).code;
+  const bundledCode = fileContents.join(isCss ? "" : "\n");
+  const minifiedCode = isCss
+    ? await minifyCss(bundledCode)
+    : (await minify(bundledCode)).code;
 
   await fs.mkdir(outputDir, { recursive: true });
   await fs.writeFile(join(outputDir, filename), minifiedCode);
 
   return minifiedCode;
+}
+
+/**
+ * Minify the given CSS code using PostCSS and cssnano.
+ *
+ * @param {string} cssCode - The CSS code to minify.
+ * @returns {Promise<string>} The minified CSS code.
+ */
+async function minifyCss(cssCode) {
+  const result = await postcss([cssnano]).process(cssCode);
+  return result.css;
 }
