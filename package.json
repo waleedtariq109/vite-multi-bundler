@@ -11,6 +11,9 @@
     "multi-bundler",
     "vite"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/waleedtariq109/vite-multi-bundler"
