@@ -21,16 +21,30 @@ import viteMultiBundler from "vite-multi-bundler";
 export default defineConfig({
   plugins: [
     viteMultiBundler({
-      js: {
-        filename: "bundled.min.js",
-        outputDir: "./output/js",
-        entryPoints: ["src/index.js", "src/another.js"],
-      },
-      css: {
-        filename: "bundled.min.css",
-        outputDir: "./output/css",
-        entryPoints: ["src/styles.css"],
-      },
+      js: [
+        {
+          filename: "backend.min.js",
+          outputDir: "./output/js",
+          entryPoints: ["src/admin.js", "src/user.js"],
+        },
+        {
+          filename: "bundled.min.js",
+          outputDir: "./output/js",
+          entryPoints: ["test/roles.js"],
+        },
+      ],
+      css: [
+        {
+          filename: "common.min.css",
+          outputDir: "./output/css",
+          entryPoints: ["src/user.css", "src/admin.css"],
+        },
+        {
+          filename: "bundled.min.css",
+          outputDir: "./output/css",
+          entryPoints: ["test/elements.css"],
+        },
+      ],
     }),
   ],
 });
@@ -44,14 +58,16 @@ Once you have defined your bundles, Vite will automatically generate the bundled
 
 The `vite-multi-bundler` takes an options object with the following properties:
 
-- `js` (object): The options for the JavaScript bundle
-  - `filename` (string): The name of the output file
-  - `outputDir` (string): The directory where the output file should be saved
-  - `entryPoints` (string[]): An array of entry points for the JavaScript bundle
-- `css` (object): The options for the CSS bundle
-  - `filename` (string): The name of the output file
-  - `outputDir` (string): The directory where the output file should be saved
-  - `entryPoints` (string[]): An array of entry points for the CSS bundle
+- `js` (Array): The options for the JavaScript bundle
+  - Object:
+    - `filename` (string): The name of the output file
+    - `outputDir` (string): The directory where the output file should be saved
+    - `entryPoints` (string[]): An array of entry points for the JavaScript bundle
+- `css` (Array): The options for the CSS bundle
+  - Object
+    - `filename` (string): The name of the output file
+    - `outputDir` (string): The directory where the output file should be saved
+    - `entryPoints` (string[]): An array of entry points for the CSS bundle
 
 ## Final Words
 

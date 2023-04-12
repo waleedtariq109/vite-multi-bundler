@@ -1,24 +1,18 @@
-import type { Plugin } from "vite";
+import { Plugin } from "vite";
 
-interface MultiBundlePluginOptions {
-  css?: {
+export interface MultiBundlePluginOptions {
+  css?: Array<{
     filename: string;
     outputDir: string;
     entryPoints: string[];
-  };
-  js?: {
+  }>;
+  js?: Array<{
     filename: string;
     outputDir: string;
     entryPoints: string[];
-  };
+  }>;
 }
 
-interface MultiBundlePlugin extends Plugin {
-  name: string;
-}
-
-declare function multiBundlePlugin(
-  options: MultiBundlePluginOptions
-): MultiBundlePlugin;
+declare function multiBundlePlugin(options: MultiBundlePluginOptions): Plugin;
 
 export default multiBundlePlugin;

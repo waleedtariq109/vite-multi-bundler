@@ -6,16 +6,16 @@ import { minify } from "terser";
  * A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
  *
  * @param {{
- *   css?: {
+ *   css?: Array<{
  *     filename: string,
  *     outputDir: string,
  *     entryPoints: string[],
- *   },
- *   js?: {
+ *   }>,
+ *   js?: Array<{
  *     filename: string,
  *     outputDir: string,
  *     entryPoints: string[],
- *   },
+ *   }>,
  * }} options - The options to configure the plugin.
  * @returns {import('vite').Plugin} A Vite plugin instance.
  */
@@ -25,29 +25,40 @@ export default function multiBundlePlugin(options) {
   return {
     name: "multi-bundle-plugin",
     async generateBundle(outputOptions, bundle) {
-      const jsBundle =
-        js && js.entryPoints.length
-          ? await bundleAssets(js.entryPoints, js.filename, js.outputDir)
-          : null;
-      const cssBundle =
-        css && css.entryPoints.length
-          ? await bundleAssets(css.entryPoints, css.filename, css.outputDir)
-          : null;
-
-      if (jsBundle) {
-        this.emitFile({
-          type: "asset",
-          fileName: js.filename,
-          source: jsBundle,
-        });
+      if (js && Array.isArray(js)) {
+        for (const jsOptions of js) {
+          if (!jsOptions.entryPoints || !jsOptions.entryPoints.length) {
+            continue;
+          }
+          const jsBundle = await bundleAssets(
+            jsOptions.entryPoints,
+            jsOptions.filename,
+            jsOptions.outputDir
+          );
+          this.emitFile({
+            type: "asset",
+            fileName: jsOptions.filename,
+            source: jsBundle,
+          });
+        }
       }
 
-      if (cssBundle) {
-        this.emitFile({
-          type: "asset",
-          fileName: css.filename,
-          source: cssBundle,
-        });
+      if (css && Array.isArray(css)) {
+        for (const cssOptions of css) {
+          if (!cssOptions.entryPoints || !cssOptions.entryPoints.length) {
+            continue;
+          }
+          const cssBundle = await bundleAssets(
+            cssOptions.entryPoints,
+            cssOptions.filename,
+            cssOptions.outputDir
+          );
+          this.emitFile({
+            type: "asset",
+            fileName: cssOptions.filename,
+            source: cssBundle,
+          });
+        }
       }
     },
   };
