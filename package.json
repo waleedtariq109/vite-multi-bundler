@@ -1,6 +1,6 @@
 {
   "name": "vite-multi-bundler",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.",
   "main": "index.js",
   "type": "module",
