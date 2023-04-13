@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "cssnano": "^6.0.0",
-    "postcss": "^8.4.21",
+    "postcss": "^8.4.21"
+  },
+  "peerDependencies": {
     "vite": "^4.2.1"
   },
   "author": "Waleed Tariq",
