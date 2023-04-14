@@ -3,11 +3,15 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   build: {
-    lib: {
-      entry: resolve(__dirname, "/index.js"),
-      name: "index",
-      fileName: "index",
+    rollupOptions: {
+      input: {
+        index: resolve(__dirname, "src/index.js"),
+      },
+      output: {
+        dir: ".output",
+        format: "es",
+        name: "index.min",
+      },
     },
-    minify: true,
   },
 });
