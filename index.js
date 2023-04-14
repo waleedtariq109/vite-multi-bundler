@@ -1,8 +1,9 @@
-import { join } from "path";
-import { promises as fs } from "fs";
+import path from "path";
+import fs from "fs";
 import { minify } from "terser";
 import postcss from "postcss";
 import cssnano from "cssnano";
+import { cyan, green, yellow, blue, magenta } from "console-log-colors";
 
 /**
  * A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
@@ -23,10 +24,13 @@ import cssnano from "cssnano";
  */
 export default function multiBundlePlugin(options) {
   const { js, css } = options;
+  let isExecuted = false;
 
   return {
     name: "multi-bundle-plugin",
     async generateBundle(outputOptions, bundle) {
+      if (isExecuted) return;
+
       if (js && Array.isArray(js)) {
         for (const jsOptions of js) {
           if (!jsOptions.entryPoints || !jsOptions.entryPoints.length) {
@@ -42,6 +46,15 @@ export default function multiBundlePlugin(options) {
             fileName: jsOptions.filename,
             source: jsBundle,
           });
+          console.log(
+            `${cyan.bold.underline(
+              `\nvite-multi-bundler ${process.env.APP_VERSION}`
+            )} - ${green("building for production")}\n\n${magenta(
+              `${jsOptions.entryPoints.length}`
+            )} ${yellow.bold("JS")} modules transformed\n${green.underline(
+              `${path.join(jsOptions.outputDir, jsOptions.filename)}`
+            )}`
+          );
         }
       }
 
@@ -61,8 +74,16 @@ export default function multiBundlePlugin(options) {
             fileName: cssOptions.filename,
             source: cssBundle,
           });
+          console.log(
+            `\n${magenta(`${cssOptions.entryPoints.length}`)} ${blue.bold(
+              "CSS"
+            )} modules transformed\n${green.underline(
+              `${path.join(cssOptions.outputDir, cssOptions.filename)}`
+            )}\n`
+          );
         }
       }
+      isExecuted = true;
     },
   };
 }
@@ -79,7 +100,9 @@ export default function multiBundlePlugin(options) {
 async function bundleAssets(files, filename, outputDir, isCss = false) {
   const cwd = process.cwd();
   const fileContents = await Promise.all(
-    files.map((filePath) => fs.readFile(join(cwd, filePath), "utf8"))
+    files.map((filePath) =>
+      fs.promises.readFile(path.join(cwd, filePath), "utf8")
+    )
   );
 
   const bundledCode = fileContents.join(isCss ? "" : "\n");
@@ -87,8 +110,8 @@ async function bundleAssets(files, filename, outputDir, isCss = false) {
     ? await minifyCss(bundledCode)
     : (await minify(bundledCode)).code;
 
-  await fs.mkdir(outputDir, { recursive: true });
-  await fs.writeFile(join(outputDir, filename), minifiedCode);
+  await fs.promises.mkdir(outputDir, { recursive: true });
+  await fs.promises.writeFile(path.join(outputDir, filename), minifiedCode);
 
   return minifiedCode;
 }

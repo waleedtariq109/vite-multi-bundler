@@ -2,6 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,visualstudiocode,phpstorm,webstorm
 
 node_modules
+dist
+.env
 
 ### Linux ###
 *~
