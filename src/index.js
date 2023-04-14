@@ -47,7 +47,7 @@ export default function multiBundlePlugin(options) {
             source: jsBundle,
           });
           console.log(
-            `${cyan.bold.underline(`\nvite-multi-bundler 1.0.17`)} - ${green(
+            `${cyan.bold.underline(`\nvite-multi-bundler 1.0.18`)} - ${green(
               "building for production"
             )}\n\n${magenta(`${jsOptions.entryPoints.length}`)} ${yellow.bold(
               "JS"
