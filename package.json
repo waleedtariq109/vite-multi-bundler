@@ -24,7 +24,7 @@
     "vite": "^4.2.1"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
