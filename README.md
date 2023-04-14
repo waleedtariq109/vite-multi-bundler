@@ -72,3 +72,7 @@ The `vite-multi-bundler` takes an options object with the following properties:
 ## Final Words
 
 Using the `vite-multi-bundler` plugin with Vite is a simple and efficient way to generate a single bundle for your multiple JavaScript and CSS files. With the options provided, you can easily configure the output directory, filename, and entry points for each bundle, making it easy to customize your build process to fit your project's needs.
+
+## Contribution
+
+This project is open source, and you are welcome to contribute if you want.
