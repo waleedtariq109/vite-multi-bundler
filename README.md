@@ -26,11 +26,13 @@ import { defineConfig } from "vite";
 import viteMultiBundler from "vite-multi-bundler";
 
 export default defineConfig({
+  // Note: While giving the file name, you don't need to add the file extension. The plugin handles this automatically on its own.
+
   plugins: [
     viteMultiBundler({
       js: [
         {
-          filename: "backend.min.js",
+          filename: "backend", // after bundling, => backend-[file_version].js
           outputDir: "./output/js",
           entryPoints: ["src/admin.js", "src/user.js"],
         },
@@ -42,7 +44,7 @@ export default defineConfig({
       ],
       css: [
         {
-          filename: "common.min.css",
+          filename: "common", // after bundling, => common-[file_version].css
           outputDir: "./output/css",
           entryPoints: ["src/user.css", "src/admin.css"],
         },

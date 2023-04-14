@@ -33,26 +33,33 @@ export default function multiBundlePlugin(options) {
 
       if (js && Array.isArray(js)) {
         for (const jsOptions of js) {
-          if (!jsOptions.entryPoints || !jsOptions.entryPoints.length) {
-            continue;
-          }
+          // Generate a unique version number
+          const version = getUnique();
+          // Add the version number to the filename
+          const filename = `${jsOptions.filename}-${version}.js`;
+
+          // Bundle and minify the assets
           const jsBundle = await bundleAssets(
             jsOptions.entryPoints,
-            jsOptions.filename,
+            filename,
             jsOptions.outputDir
           );
+
+          // Emit the file with the new filename
           this.emitFile({
             type: "asset",
-            fileName: jsOptions.filename,
+            fileName: filename,
             source: jsBundle,
           });
+
+          // Log the output with the new filename
           console.log(
-            `${cyan.bold.underline(`\nvite-multi-bundler 1.0.18`)} - ${green(
+            `${cyan.bold.underline(`\nvite-multi-bundler`)} - ${green(
               "building for production"
             )}\n\n${magenta(`${jsOptions.entryPoints.length}`)} ${yellow.bold(
               "JS"
             )} modules transformed\n${green.underline(
-              `${path.join(jsOptions.outputDir, jsOptions.filename)}`
+              `${path.join(jsOptions.outputDir, filename)}`
             )}`
           );
         }
@@ -60,25 +67,32 @@ export default function multiBundlePlugin(options) {
 
       if (css && Array.isArray(css)) {
         for (const cssOptions of css) {
-          if (!cssOptions.entryPoints || !cssOptions.entryPoints.length) {
-            continue;
-          }
+          // Generate a unique version number
+          const version = getUnique();
+          // Add the version number to the filename
+          const filename = `${cssOptions.filename}-${version}.css`;
+
+          // Bundle and minify the assets
           const cssBundle = await bundleAssets(
             cssOptions.entryPoints,
-            cssOptions.filename,
+            filename,
             cssOptions.outputDir,
             true
           );
+
+          // Emit the file with the new filename
           this.emitFile({
             type: "asset",
-            fileName: cssOptions.filename,
+            fileName: filename,
             source: cssBundle,
           });
+
+          // Log the output with the new filename
           console.log(
             `\n${magenta(`${cssOptions.entryPoints.length}`)} ${blue.bold(
               "CSS"
             )} modules transformed\n${green.underline(
-              `${path.join(cssOptions.outputDir, cssOptions.filename)}`
+              `${path.join(cssOptions.outputDir, filename)}`
             )}\n`
           );
         }
@@ -125,4 +139,12 @@ async function bundleAssets(files, filename, outputDir, isCss = false) {
 async function minifyCss(cssCode) {
   const result = await postcss([cssnano]).process(cssCode);
   return result.css;
+}
+
+/**
+ * Random Unique JavaScript Number
+ */
+
+function getUnique() {
+  return Math.random().toString(36).slice(2, 8);
 }
