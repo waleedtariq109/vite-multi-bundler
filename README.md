@@ -2,6 +2,13 @@
 
 A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
 
+## NOTE
+
+This package is currently in beta version. Here are the remaining things that need to be done in order to release a stable build.
+
+- The bundled files are generated in the specified `outputDir`, as well as the `dist` directory. However, the bundled files should only be generated in the `dist` directory when the `outputDir` property is empty.
+- Implement file versioning.
+
 ## Installation
 
 You can install the `vite-multi-bundler` using npm:
