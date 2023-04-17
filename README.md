@@ -4,10 +4,6 @@ A Vite plugin to bundle multiple CSS and JavaScript files into a single file and
 
 [![https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/vite-multi-bundler)
 
-## Note
-
-This plugin is currently in the beta version. Right now, this plugin does not resolve images from your CSS. If you are using this plugin, make sure you are not using images in CSS.
-
 ## Installation
 
 You can install the `vite-multi-bundler` using npm:
@@ -20,6 +16,12 @@ npm install vite-multi-bundler --save-dev
 
 First, import the plugin and add it to your Vite config file:
 
+**NOTE:** If you want file versioning, you don't need to specify the `file_versioning` value inside the `viteMultiBundler()` function as its default value is already set to true.
+
+### Usage with file versioning
+
+This will generate the `manifest.json` inside the `/dist`
+
 ```js
 import { defineConfig } from "vite";
 import viteMultiBundler from "vite-multi-bundler";
@@ -29,7 +31,7 @@ export default defineConfig({
 
   plugins: [
     viteMultiBundler({
-      file_versioning: false, // default => true
+      file_versioning: true, // default => true
       js: [
         {
           filename: "backend", // after bundling, => backend-[file_version].js
@@ -47,6 +49,43 @@ export default defineConfig({
         },
         {
           filename: "bundled.min.css",
+          entryPoints: ["test/elements.css"],
+        },
+      ],
+    }),
+  ],
+});
+```
+
+### Usage without file versioning
+
+```js
+import { defineConfig } from "vite";
+import viteMultiBundler from "vite-multi-bundler";
+
+export default defineConfig({
+  // Note: While giving the file name, you don't need to add the file extension. The plugin handles this automatically on its own.
+
+  plugins: [
+    viteMultiBundler({
+      file_versioning: false, // default => true
+      js: [
+        {
+          filename: "backend", // after bundling, => backend.js
+          entryPoints: ["src/admin.js", "src/user.js"],
+        },
+        {
+          filename: "bundled.min", // after bundling, => bundled.min.js
+          entryPoints: ["test/roles.js"],
+        },
+      ],
+      css: [
+        {
+          filename: "common", // after bundling, => common.css
+          entryPoints: ["src/user.css", "src/admin.css"],
+        },
+        {
+          filename: "bundled.min.css", // after bundling, => bundled.min.css
           entryPoints: ["test/elements.css"],
         },
       ],
