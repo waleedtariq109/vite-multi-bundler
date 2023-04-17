@@ -38,7 +38,7 @@ export default defineConfig({
           entryPoints: ["src/admin.js", "src/user.js"],
         },
         {
-          filename: "bundled.min.js",
+          filename: "bundled.min",
           entryPoints: ["test/roles.js"],
         },
       ],
@@ -48,7 +48,7 @@ export default defineConfig({
           entryPoints: ["src/user.css", "src/admin.css"],
         },
         {
-          filename: "bundled.min.css",
+          filename: "bundled.min", // after bundling, => bundled.min-[file_version].css
           entryPoints: ["test/elements.css"],
         },
       ],
@@ -85,7 +85,7 @@ export default defineConfig({
           entryPoints: ["src/user.css", "src/admin.css"],
         },
         {
-          filename: "bundled.min.css", // after bundling, => bundled.min.css
+          filename: "bundled.min", // after bundling, => bundled.min.css
           entryPoints: ["test/elements.css"],
         },
       ],
