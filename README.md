@@ -4,6 +4,10 @@ A Vite plugin to bundle multiple CSS and JavaScript files into a single file and
 
 [![https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/vite-multi-bundler)
 
+## Note
+
+This plugin is currently in the beta version. Right now, this plugin does not resolve images from your CSS. If you are using this plugin, make sure you are not using images in CSS.
+
 ## Installation
 
 You can install the `vite-multi-bundler` using npm:
