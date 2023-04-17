@@ -17,19 +17,14 @@
   },
   "dependencies": {
     "cssnano": "^6.0.0",
-    "postcss": "^8.4.21"
+    "postcss": "^8.4.21",
+    "terser": "^5.16.9"
   },
   "peerDependencies": {
     "vite": "^4.2.1"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.16.0",
-    "terser": "^5.16.9"
   },
   "babel": {
     "presets": [
