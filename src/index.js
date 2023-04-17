@@ -108,13 +108,55 @@ async function bundleAssets(files, filename, isCss = false) {
       fs.promises.readFile(path.join(cwd, filePath), "utf8")
     )
   );
-  const bundledCode = fileContents.join(isCss ? "" : "\n");
+
+  let bundledCode = fileContents.join(isCss ? "" : "\n");
+
+  if (isCss) {
+    // Resolve image paths in CSS
+    bundledCode = await resolveCssImages(bundledCode, cwd);
+  }
+
   const minifiedCode = isCss
     ? await minifyCss(bundledCode)
     : (await minify(bundledCode)).code;
+
   const distFilePath = path.join(process.cwd(), "dist", filename);
   await fs.promises.writeFile(distFilePath, minifiedCode);
   return minifiedCode;
+}
+
+async function resolveCssImages(cssCode, cwd) {
+  const regex = /url\(["']?(.*?)["']?\)/g;
+  const matches = [...cssCode.matchAll(regex)];
+
+  for (const match of matches) {
+    const imagePath = match[1];
+
+    // Ignore data URI and external image paths
+    if (!imagePath.startsWith("data:") && !imagePath.startsWith("http")) {
+      const imagePathAbs = path.join(cwd, "resources", "images", imagePath);
+      console.log(imagePathAbs);
+      if (fs.existsSync(imagePathAbs)) {
+        const hash = generateHash(await fs.promises.readFile(imagePathAbs));
+        const filename = `${hash}${path.extname(imagePath)}`;
+
+        // Copy image file to dist/images folder and replace path in CSS
+        const distImagePath = path.join(
+          process.cwd(),
+          "dist",
+          "images",
+          filename
+        );
+        await fs.promises.mkdir(path.dirname(distImagePath), {
+          recursive: true,
+        });
+        await fs.promises.copyFile(imagePathAbs, distImagePath);
+        cssCode = cssCode.replace(imagePath, `images/${filename}`);
+      }
+    }
+  }
+
+  return cssCode;
 }
 
 async function minifyCss(cssCode) {
