@@ -1,6 +1,7 @@
 import { Plugin } from "vite";
 
 export interface MultiBundlePluginOptions {
+  file_versioning?: boolean;
   css?: Array<{
     filename: string;
     outputDir: string;

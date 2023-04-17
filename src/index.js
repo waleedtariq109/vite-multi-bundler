@@ -1,30 +1,14 @@
 import path from "path";
 import fs from "fs";
+import crypto from "crypto";
 import { minify } from "terser";
 import postcss from "postcss";
 import cssnano from "cssnano";
-import { cyan, green, yellow, blue, magenta } from "console-log-colors";
 
-/**
- * A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
- *
- * @param {{
- *   css?: Array<{
- *     filename: string,
- *     outputDir: string,
- *     entryPoints: string[],
- *   }>,
- *   js?: Array<{
- *     filename: string,
- *     outputDir: string,
- *     entryPoints: string[],
- *   }>,
- * }} options - The options to configure the plugin.
- * @returns {import('vite').Plugin} A Vite plugin instance.
- */
 export default function multiBundlePlugin(options) {
-  const { js, css } = options;
+  const { js, css, file_versioning = true } = options;
   let isExecuted = false;
+  let manifest = {};
 
   return {
     name: "multi-bundle-plugin",
@@ -33,117 +17,114 @@ export default function multiBundlePlugin(options) {
 
       if (js && Array.isArray(js)) {
         for (const jsOptions of js) {
-          // Generate a unique version number
-          const version = getUnique();
-          // Add the version number to the filename
-          const filename = `${jsOptions.filename}-${version}.js`;
-
-          // Bundle and minify the assets
+          const filename = file_versioning
+            ? `${jsOptions.filename}-${getUnique()}.js`
+            : `${jsOptions.filename}.js`;
           const jsBundle = await bundleAssets(
             jsOptions.entryPoints,
             filename,
-            jsOptions.outputDir
+            false
           );
+          if (file_versioning) {
+            const integrity = generateHash(jsBundle);
+            manifest[jsOptions.entryPoints] = {
+              file: filename,
+              isEntry: true,
+              src:
+                jsOptions.entryPoints.length > 1
+                  ? jsOptions.entryPoints
+                  : jsOptions.entryPoints[0],
+              integrity,
+            };
+          }
 
-          // Emit the file with the new filename
           this.emitFile({
             type: "asset",
             fileName: filename,
             source: jsBundle,
           });
-
-          // Log the output with the new filename
-          console.log(
-            `${cyan.bold.underline(`\nvite-multi-bundler`)} - ${green(
-              "building for production"
-            )}\n\n${magenta(`${jsOptions.entryPoints.length}`)} ${yellow.bold(
-              "JS"
-            )} modules transformed\n${green.underline(
-              `${path.join(jsOptions.outputDir, filename)}`
-            )}`
-          );
+          // Delete file from root directory
+          const rootDirFilePath = path.join(process.cwd(), filename);
+          if (fs.existsSync(rootDirFilePath)) {
+            await fs.promises.unlink(rootDirFilePath);
+          }
         }
       }
 
       if (css && Array.isArray(css)) {
         for (const cssOptions of css) {
-          // Generate a unique version number
-          const version = getUnique();
-          // Add the version number to the filename
-          const filename = `${cssOptions.filename}-${version}.css`;
-
-          // Bundle and minify the assets
+          const filename = file_versioning
+            ? `${cssOptions.filename}-${getUnique()}.css`
+            : `${cssOptions.filename}.css`;
           const cssBundle = await bundleAssets(
             cssOptions.entryPoints,
             filename,
-            cssOptions.outputDir,
             true
           );
+          if (file_versioning) {
+            const integrity = generateHash(cssBundle);
+            manifest[cssOptions.entryPoints] = {
+              file: filename,
+              isEntry: true,
+              src:
+                cssOptions.entryPoints.length > 1
+                  ? cssOptions.entryPoints
+                  : cssOptions.entryPoints[0],
+              integrity,
+            };
+          }
 
-          // Emit the file with the new filename
           this.emitFile({
             type: "asset",
             fileName: filename,
             source: cssBundle,
           });
-
-          // Log the output with the new filename
-          console.log(
-            `\n${magenta(`${cssOptions.entryPoints.length}`)} ${blue.bold(
-              "CSS"
-            )} modules transformed\n${green.underline(
-              `${path.join(cssOptions.outputDir, filename)}`
-            )}\n`
-          );
+          // Delete file from root directory
+          const rootDirFilePath = path.join(process.cwd(), filename);
+          if (fs.existsSync(rootDirFilePath)) {
+            await fs.promises.unlink(rootDirFilePath);
+          }
         }
       }
+
       isExecuted = true;
+
+      if (file_versioning) {
+        // Write manifest file to disk
+        const manifestPath = path.join(outputOptions.dir, "manifest.json");
+        await fs.promises.writeFile(
+          manifestPath,
+          JSON.stringify(manifest, null, 2)
+        );
+      }
     },
   };
 }
 
-/**
- * Bundles multiple files into a single file and minify it.
- *
- * @param {string[]} files - The array of file paths to bundle.
- * @param {string} filename - The output file name.
- * @param {string} outputDir - The output directory path.
- * @param {boolean} isCss - Whether the files to be bundled are CSS files or not.
- * @returns {Promise<string>} The bundled and minified code.
- */
-async function bundleAssets(files, filename, outputDir, isCss = false) {
+async function bundleAssets(files, filename, isCss = false) {
   const cwd = process.cwd();
   const fileContents = await Promise.all(
     files.map((filePath) =>
       fs.promises.readFile(path.join(cwd, filePath), "utf8")
     )
   );
-
   const bundledCode = fileContents.join(isCss ? "" : "\n");
   const minifiedCode = isCss
     ? await minifyCss(bundledCode)
     : (await minify(bundledCode)).code;
-
-  await fs.promises.mkdir(outputDir, { recursive: true });
-  await fs.promises.writeFile(path.join(outputDir, filename), minifiedCode);
-
+  const distFilePath = path.join(process.cwd(), "dist", filename);
+  await fs.promises.writeFile(distFilePath, minifiedCode);
   return minifiedCode;
 }
 
-/**
- * Minify the given CSS code using PostCSS and cssnano.
- *
- * @param {string} cssCode - The CSS code to minify.
- * @returns {Promise<string>} The minified CSS code.
- */
 async function minifyCss(cssCode) {
   const result = await postcss([cssnano]).process(cssCode);
   return result.css;
 }
 
-/**
- * Random Unique JavaScript Number
- */
+function generateHash(data) {
+  return crypto.createHash("sha256").update(data).digest("hex");
+}
 
 function getUnique() {
   return Math.random().toString(36).slice(2, 8);

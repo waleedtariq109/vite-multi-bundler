@@ -2,12 +2,7 @@
 
 A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
 
-## NOTE
-
-This package is currently in beta version. Here are the remaining things that need to be done in order to release a stable build.
-
-- The bundled files are generated in the specified `outputDir`, as well as the `dist` directory. However, the bundled files should only be generated in the `dist` directory when the `outputDir` property is empty.
-- Implement file versioning.
+[![https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/vite-multi-bundler)
 
 ## Installation
 
@@ -30,27 +25,24 @@ export default defineConfig({
 
   plugins: [
     viteMultiBundler({
+      file_versioning: false, // default => true
       js: [
         {
           filename: "backend", // after bundling, => backend-[file_version].js
-          outputDir: "./output/js",
           entryPoints: ["src/admin.js", "src/user.js"],
         },
         {
           filename: "bundled.min.js",
-          outputDir: "./output/js",
           entryPoints: ["test/roles.js"],
         },
       ],
       css: [
         {
           filename: "common", // after bundling, => common-[file_version].css
-          outputDir: "./output/css",
           entryPoints: ["src/user.css", "src/admin.css"],
         },
         {
           filename: "bundled.min.css",
-          outputDir: "./output/css",
           entryPoints: ["test/elements.css"],
         },
       ],
@@ -67,12 +59,20 @@ Once you have defined your bundles, Vite will automatically generate the bundled
 
 The `vite-multi-bundler` takes an options object with the following properties:
 
-- `js` (Array): The options for the JavaScript bundle
+- `file_versioning` (Boolean): The default value is true
+
+  - If this option is set to true, then the generated file will have a random version number, for example, `common-09sx89.js`, and it will also generate the `manifest.json` file.
+
+  - If you want the file to be generated without a version number, then set this option to false. It will generate the file with the specified name, such as `common.js`, and it won't generate the `manifest.json` file
+
+- `js` (Array): The options array for the JavaScript bundle
+
   - Object:
     - `filename` (string): The name of the output file
     - `outputDir` (string): The directory where the output file should be saved
     - `entryPoints` (string[]): An array of entry points for the JavaScript bundle
-- `css` (Array): The options for the CSS bundle
+
+- `css` (Array): The options array for the CSS bundle
   - Object
     - `filename` (string): The name of the output file
     - `outputDir` (string): The directory where the output file should be saved
@@ -80,7 +80,7 @@ The `vite-multi-bundler` takes an options object with the following properties:
 
 ## Final Words
 
-Using the `vite-multi-bundler` plugin with Vite is a simple and efficient way to generate a single bundle for your multiple JavaScript and CSS files. With the options provided, you can easily configure the output directory, filename, and entry points for each bundle, making it easy to customize your build process to fit your project's needs.
+Using the `vite-multi-bundler` plugin with Vite is a simple and efficient way to generate multiple bundles for your JavaScript and CSS files. With the options provided, you can easily configure the filename and entry points for each bundle, making it easy to customize your build process to fit your project's needs.
 
 ## Contribution
 

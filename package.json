@@ -17,8 +17,7 @@
   },
   "dependencies": {
     "cssnano": "^6.0.0",
-    "postcss": "^8.4.21",
-    "console-log-colors": "^0.4.0"
+    "postcss": "^8.4.21"
   },
   "peerDependencies": {
     "vite": "^4.2.1"
