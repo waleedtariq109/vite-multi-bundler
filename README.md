@@ -69,13 +69,11 @@ The `vite-multi-bundler` takes an options object with the following properties:
 
   - Object:
     - `filename` (string): The name of the output file
-    - `outputDir` (string): The directory where the output file should be saved
     - `entryPoints` (string[]): An array of entry points for the JavaScript bundle
 
 - `css` (Array): The options array for the CSS bundle
   - Object
     - `filename` (string): The name of the output file
-    - `outputDir` (string): The directory where the output file should be saved
     - `entryPoints` (string[]): An array of entry points for the CSS bundle
 
 ## Final Words
