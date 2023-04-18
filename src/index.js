@@ -59,7 +59,8 @@ export default function multiBundlePlugin(options) {
           const cssBundle = await bundleAssets(
             cssOptions.entryPoints,
             filename,
-            true
+            true,
+            outputOptions.dir
           );
           if (file_versioning) {
             const integrity = generateHash(cssBundle);
@@ -101,7 +102,7 @@ export default function multiBundlePlugin(options) {
   };
 }
 
-async function bundleAssets(files, filename, isCss = false) {
+async function bundleAssets(files, filename, isCss = false, outDir) {
   const cwd = process.cwd();
   const fileContents = await Promise.all(
     files.map((filePath) =>
@@ -113,7 +114,7 @@ async function bundleAssets(files, filename, isCss = false) {
 
   if (isCss) {
     // Resolve image paths in CSS
-    bundledCode = await resolveCssImages(bundledCode, cwd);
+    bundledCode = await resolveCssImages(bundledCode, cwd, outDir);
   }
 
   const minifiedCode = isCss
@@ -125,7 +126,7 @@ async function bundleAssets(files, filename, isCss = false) {
   return minifiedCode;
 }
 
-async function resolveCssImages(cssCode, cwd) {
+async function resolveCssImages(cssCode, cwd, outDir) {
   const regex = /url\(["']?(.*?)["']?\)/g;
   const matches = [...cssCode.matchAll(regex)];
 
@@ -140,13 +141,8 @@ async function resolveCssImages(cssCode, cwd) {
         const hash = generateHash(await fs.promises.readFile(imagePathAbs));
         const filename = `${hash}${path.extname(imagePath)}`;
 
-        // Copy image file to dist/images folder and replace path in CSS
-        const distImagePath = path.join(
-          process.cwd(),
-          "dist",
-          "images",
-          filename
-        );
+        // Copy image file to output directory and replace path in CSS
+        const distImagePath = path.join(outDir, "images", filename);
         await fs.promises.mkdir(path.dirname(distImagePath), {
           recursive: true,
         });
