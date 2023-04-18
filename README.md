@@ -38,7 +38,7 @@ export default defineConfig({
           entryPoints: ["src/admin.js", "src/user.js"],
         },
         {
-          filename: "bundled.min",
+          filename: "bundled.min", // after bundling, => bundled.min-[file_version].js
           entryPoints: ["test/roles.js"],
         },
       ],
