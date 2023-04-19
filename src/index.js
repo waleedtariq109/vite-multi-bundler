@@ -27,13 +27,9 @@ export default function multiBundlePlugin(options) {
           );
           if (file_versioning) {
             const integrity = generateHash(jsBundle);
-            manifest[jsOptions.entryPoints] = {
+            manifest[jsOptions.entryPoints.at(-1)] = {
               file: filename,
               isEntry: true,
-              src:
-                jsOptions.entryPoints.length > 1
-                  ? jsOptions.entryPoints
-                  : jsOptions.entryPoints[0],
               integrity,
             };
           }
@@ -64,13 +60,9 @@ export default function multiBundlePlugin(options) {
           );
           if (file_versioning) {
             const integrity = generateHash(cssBundle);
-            manifest[cssOptions.entryPoints] = {
+            manifest[cssOptions.entryPoints.at(-1)] = {
               file: filename,
               isEntry: true,
-              src:
-                cssOptions.entryPoints.length > 1
-                  ? cssOptions.entryPoints
-                  : cssOptions.entryPoints[0],
               integrity,
             };
           }
@@ -160,7 +152,11 @@ async function minifyCss(cssCode) {
 }
 
 function generateHash(data) {
-  return crypto.createHash("sha256").update(data).digest("hex");
+  const timestamp = new Date().getMilliseconds().toString();
+  return crypto
+    .createHash("sha256")
+    .update(data + timestamp)
+    .digest("hex");
 }
 
 function getUnique() {
