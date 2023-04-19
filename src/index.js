@@ -128,6 +128,7 @@ async function resolveCssImages(cssCode, cwd, outDir) {
     // Ignore data URI and external image paths
     if (!imagePath.startsWith("data:") && !imagePath.startsWith("http")) {
       const imagePathAbs = path.join(cwd, "resources", "images", imagePath);
+      console.log(imagePathAbs);
       if (fs.existsSync(imagePathAbs)) {
         const hash = generateHash(await fs.promises.readFile(imagePathAbs));
         const filename = `${hash}${path.extname(imagePath)}`;
@@ -154,7 +155,7 @@ async function minifyCss(cssCode) {
 function generateHash(data) {
   const timestamp = new Date().getMilliseconds().toString();
   return crypto
-    .createHash("sha256")
+    .createHash("sha512")
     .update(data + timestamp)
     .digest("hex");
 }
