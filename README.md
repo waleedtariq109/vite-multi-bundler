@@ -2,8 +2,6 @@
 
 A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
 
-[![https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/vite-multi-bundler.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/vite-multi-bundler)
-
 ## Installation
 
 You can install the `vite-multi-bundler` using npm:
