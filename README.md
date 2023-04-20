@@ -2,7 +2,11 @@
 
 A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
 
-## Installation
+# Important Note
+
+Right now, this plugin only resolves images that reside in the `resources/images` directory. In future updates, this feature will be more flexible, and you will be able to place your images in any directory you want. Currently, you have to place the images that are being used in CSS in the `resources/images` directory.
+
+# Installation
 
 You can install the `vite-multi-bundler` using npm:
 
@@ -10,13 +14,13 @@ You can install the `vite-multi-bundler` using npm:
 npm install vite-multi-bundler --save-dev
 ```
 
-## Usage
+# Usage
 
 First, import the plugin and add it to your Vite config file:
 
 **NOTE:** If you want file versioning, you don't need to specify the `file_versioning` value inside the `viteMultiBundler()` function as its default value is already set to true.
 
-### Usage with file versioning
+# Usage with file versioning
 
 This will generate the `manifest.json` inside the `/dist`
 
@@ -55,7 +59,7 @@ export default defineConfig({
 });
 ```
 
-### Usage without file versioning
+# Usage without file versioning
 
 ```js
 import { defineConfig } from "vite";
@@ -96,7 +100,7 @@ You can define multiple entry points for each bundle and specify the output dire
 
 Once you have defined your bundles, Vite will automatically generate the bundled files in the specified output directories when you run the `npm run build` command.
 
-## Options
+# Options
 
 The `vite-multi-bundler` takes an options object with the following properties:
 
@@ -117,10 +121,10 @@ The `vite-multi-bundler` takes an options object with the following properties:
     - `filename` (string): The name of the output file
     - `entryPoints` (string[]): An array of entry points for the CSS bundle
 
-## Final Words
+# Final Words
 
 Using the `vite-multi-bundler` plugin with Vite is a simple and efficient way to generate multiple bundles for your JavaScript and CSS files. With the options provided, you can easily configure the filename and entry points for each bundle, making it easy to customize your build process to fit your project's needs.
 
-## Contribution
+# Contribution
 
 This project is open source, and you are welcome to contribute if you want.
