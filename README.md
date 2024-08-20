@@ -1,3 +1,7 @@
+# Warning
+### This is an experimental project and is not recommended or suitable for use in production, as it may not properly bundle your assets. Instead, it could potentially bundle your entire application and leave it vulnerable to being discarded by the garbage collector.
+
+
 # vite-multi-bundler
 
 A Vite plugin to bundle multiple CSS and JavaScript files into a single file and minify it.
