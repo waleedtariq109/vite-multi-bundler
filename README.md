@@ -15,6 +15,7 @@ Right now, this plugin only resolves images that reside in the `resources/images
 You can install the `vite-multi-bundler` using npm:
 
 ```sh
+# Friendly advice, don’t try it won’t work. As npm is not capable enough to add this in registery
 npm install vite-multi-bundler --save-dev
 ```
 
